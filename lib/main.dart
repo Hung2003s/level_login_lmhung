@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:level_login_lmhung/core/hive/account_model_adapter.dart';
-import 'package:level_login_lmhung/core/hive/local_account_service.dart';
 import 'package:level_login_lmhung/core/utils/app_theme.dart';
+import 'package:level_login_lmhung/feature/auth/data/datasources/account_local_source.dart';
+import 'package:level_login_lmhung/feature/auth/data/datasources/account_model_adapter.dart';
 
 import 'core/di/app_binding.dart';
 import 'navigation/app_routers.dart';
@@ -20,17 +20,17 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(AccountModelAdapter());
 
-  // Initialize LocalAccountService
-  final localAccountService = LocalAccountService();
-  await localAccountService.init();
+  // Initialize AccountLocalSource
+  final accountLocalSource = AccountLocalSource();
+  await accountLocalSource.init();
 
-  runApp(MyApp(localAccountService: localAccountService));
+  runApp(MyApp(accountLocalSource: accountLocalSource));
 }
 
 class MyApp extends StatelessWidget {
-  final LocalAccountService localAccountService;
+  final AccountLocalSource accountLocalSource;
 
-  const MyApp({super.key, required this.localAccountService});
+  const MyApp({super.key, required this.accountLocalSource});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       initialRoute: Routes.login,
       getPages: AppRouter.pages,
-      initialBinding: AppBinding(localAccountService: localAccountService),
+      initialBinding: AppBinding(accountLocalSource: accountLocalSource),
     );
   }
 }

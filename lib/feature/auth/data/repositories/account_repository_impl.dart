@@ -1,18 +1,18 @@
-import 'package:level_login_lmhung/core/connectivity/connectivity_service.dart';
-import 'package:level_login_lmhung/core/firestore/account_service.dart';
-import 'package:level_login_lmhung/core/hive/local_account_service.dart';
+import 'package:level_login_lmhung/core/services/connectivity_service.dart';
+import 'package:level_login_lmhung/feature/auth/data/datasources/account_local_source.dart';
+import 'package:level_login_lmhung/feature/auth/data/datasources/account_remote_source.dart';
 import 'package:level_login_lmhung/feature/auth/data/models/account_model.dart';
 import 'package:level_login_lmhung/feature/auth/domain/entities/account.dart';
 import 'package:level_login_lmhung/feature/auth/domain/repositories/i_account_repository.dart';
 
 class AccountRepositoryImpl implements IAccountRepository {
-  final AccountService _firestoreService;
-  final LocalAccountService _localService;
+  final AccountRemoteSource _remoteSource;
+  final AccountLocalSource _localSource;
   final ConnectivityService _connectivityService;
 
   AccountRepositoryImpl(
-    this._firestoreService,
-    this._localService,
+    this._remoteSource,
+    this._localSource,
     this._connectivityService,
   );
 
@@ -21,15 +21,15 @@ class AccountRepositoryImpl implements IAccountRepository {
   @override
   Future<Account?> getAccountByUsername(String username) async {
     // Try local first (fast)
-    final localModel = _localService.getAccountByUsername(username);
+    final localModel = _localSource.getAccountByUsername(username);
     if (localModel != null) return localModel.toEntity();
 
     // If not found locally, try Firebase if online
     if (await _isOnline) {
-      final firebaseModel = await _firestoreService.getAccountByUsername(username);
+      final firebaseModel = await _remoteSource.getAccountByUsername(username);
       if (firebaseModel != null) {
         // Sync to local for offline access
-        await _localService.createAccount(firebaseModel);
+        await _localSource.createAccount(firebaseModel);
         return firebaseModel.toEntity();
       }
     }
@@ -40,11 +40,11 @@ class AccountRepositoryImpl implements IAccountRepository {
   @override
   Future<bool> isUsernameTaken(String username) async {
     // Check local first (fast)
-    if (_localService.isUsernameTaken(username)) return true;
+    if (_localSource.isUsernameTaken(username)) return true;
 
     // Then check Firebase if online
     if (await _isOnline) {
-      return await _firestoreService.isUsernameTaken(username);
+      return await _remoteSource.isUsernameTaken(username);
     }
 
     return false;
@@ -56,7 +56,7 @@ class AccountRepositoryImpl implements IAccountRepository {
 
     if (await _isOnline) {
       // Save to Firebase
-      final firebaseId = await _firestoreService.createAccount(model);
+      final firebaseId = await _remoteSource.createAccount(model);
 
       // Save to local with same ID
       final localModel = AccountModel(
@@ -69,10 +69,10 @@ class AccountRepositoryImpl implements IAccountRepository {
         enabled: model.enabled,
         updatedAt: model.updatedAt,
       );
-      await _localService.createAccount(localModel);
+      await _localSource.createAccount(localModel);
     } else {
       // Save to local only when offline
-      await _localService.createAccount(model);
+      await _localSource.createAccount(model);
     }
   }
 }

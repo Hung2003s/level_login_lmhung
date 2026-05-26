@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:level_login_lmhung/feature/auth/data/models/account_model.dart';
-
-class AccountService {
+///Lấy dữ liệu từ firebase
+class AccountRemoteSource {
   final CollectionReference _accounts =
       FirebaseFirestore.instance.collection('account');
 

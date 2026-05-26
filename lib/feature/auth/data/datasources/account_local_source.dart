@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:level_login_lmhung/feature/auth/data/models/account_model.dart';
-
-class LocalAccountService {
+///Lấy dữ liệu từ hive database
+class AccountLocalSource {
   static const String _boxName = 'accounts';
 
   late Box<AccountModel> _box;
