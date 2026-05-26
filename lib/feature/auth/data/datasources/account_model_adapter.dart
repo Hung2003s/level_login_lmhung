@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:level_login_lmhung/feature/auth/data/models/account_model.dart';
-
+/// Lớp dùng để giúp Hive lưu object
 class AccountModelAdapter extends TypeAdapter<AccountModel> {
   @override
   final int typeId = 0;
