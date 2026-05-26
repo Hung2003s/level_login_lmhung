@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "169890772058",
+    "project_id": "animal-db-2bb74",
+    "storage_bucket": "animal-db-2bb74.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:169890772058:android:ec48054f4835c76d6b5463",
+        "android_client_info": {
+          "package_name": "com.example.level_login_lmhung"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAX9fai06LLvPnIL3sDWF48JK64CBYNKos"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:169890772058:android:3cf9755246dd11366b5463",
+        "android_client_info": {
+          "package_name": "com.example.vimes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAX9fai06LLvPnIL3sDWF48JK64CBYNKos"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
